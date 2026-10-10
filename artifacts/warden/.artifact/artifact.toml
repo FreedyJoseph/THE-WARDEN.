@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "WARDEN Security Command"
+description = "An interactive command dashboard for WARDEN, an autonomous Kubernetes security system. Monitor adversarial attacker-versus-defender simulations, review deterministic verification results, and explore a searchable archive of security episodes."
+version = "1.0.0"
+id = "artifacts/warden"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 19731
+
+[services.development]
+run = "pnpm --filter @workspace/warden run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/warden", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/warden/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "19731"
+BASE_PATH = "/"
